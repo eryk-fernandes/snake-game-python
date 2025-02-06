@@ -75,12 +75,6 @@ def detect_snake_fruit_collision(snake, fruit):
         return True
     return False
 
-# Detecta se a posição da fruta ocupa a mesma posição da cabeça da cobra
-def detect_fruit_inside_head(fruit, snake):
-    if int(fruit.pos.x) == int(snake.body[0].x) and int(fruit.pos.y) == int(snake.body[0].y):
-        return True
-    return False
-
 # Detecta se a posição da fruta ocupa a mesma posição de uma das partes da cobra
 def detect_fruit_inside_snake(fruit, snake):
     for part in snake.body:
@@ -186,13 +180,10 @@ def game_start(snake, fruit, score, keys_pressed):
 
         # Detecta colisão da cabeça da cobra com a fruta, mudando a posição da fruta
         if detect_snake_fruit_collision(snake, fruit):
+            
             change_fruit_position(fruit, snake)
-
-            # No caso de uma nova fruta for criada na mesma posição da cabeça da cobra
-            # Evita que o tamanho da cobra e a pontuação sejam alterados
-            if not detect_fruit_inside_head(fruit, snake):
-                snake.grow_snake()
-                score.up_score()
+            snake.grow_snake()
+            score.up_score()
 
         # Detecta colisão da cabeça da cobra com a parede ou próprio corpo
         if detect_wall_collision(snake) or detect_head_body_collision(snake):
