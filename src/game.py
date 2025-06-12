@@ -1,8 +1,11 @@
 import pygame, sys, os
 from random import randint
 
-from fruit import Fruit
-from snake import Snake
+from pygame.key import ScancodeWrapper
+
+from src.entities.fruit import Fruit
+from src.entities.snake import Snake
+from src.entities.block import Block
 from mechanics import Score
 from mechanics import KeysPressed
 from menu import Menu
@@ -31,24 +34,18 @@ BLUE = (45, 45, 200)
 # Criação do objeto Menu com o atributo Nome da Fonte
 menu = Menu('segoeuisemibold', BLUE)
 
-# Sprites
-fruit_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'fruit.png')).convert_alpha()
-wall_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'wall.png')).convert_alpha()
-grass_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'grass.png')).convert_alpha()
-game_image = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'game_image.png')).convert_alpha()
-
 # Toca música de fundo
-def play_background_sound():
+def play_background_sound() -> None:
     pygame.mixer.music.load(os.path.join('..', 'assets', 'sounds', 'background_sound.mp3'))
     pygame.mixer.music.play(-1)
 
 # Toca música de fim de jogo
-def play_game_over_sound():
+def play_game_over_sound() -> None:
     pygame.mixer.music.load(os.path.join('..', 'assets', 'sounds', 'game_over_sound.mp3'))
     pygame.mixer.music.play()
 
 # Detecta colisão da cabeça da cobra as demais partes do corpo
-def detect_head_body_collision(snake):
+def detect_head_body_collision(snake) -> bool:
     head = snake.body[0]
 
     for part in snake.body[1:]:
@@ -57,7 +54,7 @@ def detect_head_body_collision(snake):
     return False
 
 # Detecta colisão da cabeça da cobra com parede
-def detect_wall_collision(snake):
+def detect_wall_collision(snake) -> bool:
     head = snake.body[0]
 
     if head.y <= 0 or head.y >= CELL_NUMBER - 1 or head.x <= 0 or head.x >= CELL_NUMBER - 1:
@@ -65,7 +62,7 @@ def detect_wall_collision(snake):
     return False
 
 # Detecta colisão da cabeça da cobra com a fruta
-def detect_snake_fruit_collision(snake, fruit):
+def detect_snake_fruit_collision(snake, fruit) -> bool:
     head = snake.body[0]
 
     if head.x == fruit.pos.x and head.y == fruit.pos.y:
@@ -73,7 +70,7 @@ def detect_snake_fruit_collision(snake, fruit):
     return False
 
 # Detecta se a posição da fruta ocupa a mesma posição de uma das partes da cobra
-def detect_fruit_inside_snake(fruit, snake):
+def detect_fruit_inside_snake(fruit, snake) -> bool:
     for part in snake.body:
         if int(fruit.pos.x) == int(part.x) and int(fruit.pos.y) == int(part.y):
             return True
@@ -81,7 +78,7 @@ def detect_fruit_inside_snake(fruit, snake):
 
 # Muda a posição da fruta
 # Checando se não muda pra uma posição que pertence à cobra
-def change_fruit_position(fruit, snake):
+def change_fruit_position(fruit, snake) -> None:
     fruit.pos.x = randint(1, CELL_NUMBER - 2)
     fruit.pos.y = randint(1, CELL_NUMBER - 2)
 
@@ -89,11 +86,11 @@ def change_fruit_position(fruit, snake):
         change_fruit_position(fruit, snake)
 
 # Lê os inputs do usuário
-def read_user_input():
+def read_user_input() -> ScancodeWrapper:
     return pygame.key.get_pressed()
 
 # Move a cobra
-def move_snake(snake, keys_pressed):
+def move_snake(snake: Snake, keys_pressed: KeysPressed) -> None:
     keys = read_user_input()
 
     # Cada condição só é verdade quando uma tecla WASD é apertada (ou a correspondente na seta)
@@ -121,23 +118,23 @@ def detect_border(x, y):
     return False
 
 # Desenha os sprites na matriz
-def draw_background():
+def draw_background(block: Block) -> None:
     for x in range(CELL_NUMBER):
         for y in range(CELL_NUMBER):
 
             # Desenha as bordas da matriz com o sprite do arbusto (a parede)
             # E o restante com o sprite da grama
             if detect_border(x, y):
-                WINDOW.blit(wall_sprite, pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                WINDOW.blit(block.wall_sprite, pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
             else:
-                WINDOW.blit(grass_sprite, pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                WINDOW.blit(block.grass_sprite, pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
 # Desenha todos os elementos na tela
-def draw_game_elements(snake, fruit, score):
-    draw_background()
+def draw_game_elements(snake: Snake, fruit: Fruit, score: Score, block: Block) -> None:
+    draw_background(block)
 
     # Desenha a fruta
-    WINDOW.blit(fruit_sprite, fruit.get_fruit_rect(CELL_SIZE))
+    WINDOW.blit(fruit.sprite, fruit.get_fruit_rect(CELL_SIZE))
 
     # Cria uma lista com os retângulos do corpo da cobra
     snake_blocks = snake.get_snake_rect(CELL_SIZE)
@@ -161,7 +158,7 @@ def draw_game_elements(snake, fruit, score):
     pygame.display.update()
 
 # Inicia a lógica do jogo
-def game_start(snake, fruit, score, keys_pressed):
+def game_start(snake: Snake, fruit: Fruit, score: Score, keys_pressed: KeysPressed, block: Block) -> None:
 
     play_background_sound()
 
@@ -193,10 +190,10 @@ def game_start(snake, fruit, score, keys_pressed):
         move_snake(snake, keys_pressed)
 
         # Desenha os elementos
-        draw_game_elements(snake, fruit, score)
+        draw_game_elements(snake, fruit, score, block)
 
 
-def init():
+def init() -> None:
 
     while True:
         # Checa o evento de fechar a janela
@@ -226,7 +223,9 @@ def init():
             # Cria o objeto KeysPressed, pra ler os inputs das teclas WASD (ou respectivas nas setas)
             keys_pressed = KeysPressed('LEFT')
 
-            game_start(snake, fruit, score, keys_pressed)
+            block = Block()
+
+            game_start(snake, fruit, score, keys_pressed, block)
 
         # Desenha o menu
         menu.fill_menu(WINDOW)
@@ -235,6 +234,6 @@ def init():
         menu.write_text(WINDOW, "PRESS SPACE TO START", 4 * CELL_SIZE, 8 * CELL_NUMBER, WHITE)
 
         # Desenhando a imagem exemplo do jogo
-        WINDOW.blit(game_image, pygame.Rect(80, 270, 420, 270))
+        WINDOW.blit(menu.game_sprite, pygame.Rect(80, 270, 420, 270))
 
         pygame.display.update()

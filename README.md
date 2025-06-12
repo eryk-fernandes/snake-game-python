@@ -18,7 +18,7 @@ pip install pygame-ce
 python ./src/main.py
 ```
 
-<img src="./assets/sprites/game_image.png" width="200" alt="snake-game-photo">
+<img src="assets/sprites/game_image.png" width="200" alt="snake-game-photo">
 
 💻 Tecnologias:
 - Python 3

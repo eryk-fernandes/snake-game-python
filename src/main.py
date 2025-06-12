@@ -1,7 +1,7 @@
-import game
+from src import game
 
 
-def main():
+def main() -> None:
     # Inicia o jogo
     game.init()
 
