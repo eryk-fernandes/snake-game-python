@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.math import Vector2 as Vect
 
 class Snake:
@@ -6,6 +6,10 @@ class Snake:
         head = Vect(cell_number - 5, cell_number / 2 - 1)
 
         self.body = [head, Vect(head.x + 1, head.y), Vect(head.x + 2, head.y)]
+
+        self.head_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'head.png')).convert_alpha()
+        self.body_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'body.png')).convert_alpha()
+        self.tail_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'tail.png')).convert_alpha()
 
     # Retorna os retângulos da cobra
     def get_snake_rect(self, cell_size):

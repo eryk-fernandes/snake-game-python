@@ -32,22 +32,19 @@ BLUE = (45, 45, 200)
 menu = Menu('segoeuisemibold', BLUE)
 
 # Sprites
-fruit_sprite = pygame.image.load(os.path.join('assets', 'sprites', 'fruit.png')).convert_alpha()
-snake_head_sprite = pygame.image.load(os.path.join('assets', 'sprites', 'head.png')).convert_alpha()
-snake_body_sprite = pygame.image.load(os.path.join('assets', 'sprites', 'body.png')).convert_alpha()
-snake_tail_sprite = pygame.image.load(os.path.join('assets', 'sprites', 'tail.png')).convert_alpha()
-wall_sprite = pygame.image.load(os.path.join('assets', 'sprites', 'wall.png')).convert_alpha()
-grass_sprite = pygame.image.load(os.path.join('assets', 'sprites','grass.png')).convert_alpha()
-game_image = pygame.image.load(os.path.join('assets', 'sprites', 'game_image.png')).convert_alpha()
+fruit_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'fruit.png')).convert_alpha()
+wall_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'wall.png')).convert_alpha()
+grass_sprite = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'grass.png')).convert_alpha()
+game_image = pygame.image.load(os.path.join('..', 'assets', 'sprites', 'game_image.png')).convert_alpha()
 
 # Toca música de fundo
 def play_background_sound():
-    pygame.mixer.music.load(os.path.join('assets', 'sounds', 'background_sound.mp3'))
+    pygame.mixer.music.load(os.path.join('..', 'assets', 'sounds', 'background_sound.mp3'))
     pygame.mixer.music.play(-1)
 
 # Toca música de fim de jogo
 def play_game_over_sound():
-    pygame.mixer.music.load(os.path.join('assets', 'sounds', 'game_over_sound.mp3'))
+    pygame.mixer.music.load(os.path.join('..', 'assets', 'sounds', 'game_over_sound.mp3'))
     pygame.mixer.music.play()
 
 # Detecta colisão da cabeça da cobra as demais partes do corpo
@@ -147,17 +144,17 @@ def draw_game_elements(snake, fruit, score):
 
     # Desenha o corpo da cobra
     for block in snake_blocks[1:-1]:
-        WINDOW.blit(snake_body_sprite, block)
+        WINDOW.blit(snake.body_sprite, block)
 
     # Desenha a causa da cobra
-    WINDOW.blit(snake_tail_sprite, snake_blocks[-1])
+    WINDOW.blit(snake.tail_sprite, snake_blocks[-1])
 
     # Desenha a cabeça da cobra
-    WINDOW.blit(snake_head_sprite, snake_blocks[0])
+    WINDOW.blit(snake.head_sprite, snake_blocks[0])
 
     # Desenha a pontuação
     font = pygame.font.SysFont('verdana', 20, True)
-    score_text = font.render("SCORE: " + str(score.score), 1, BLUE)
+    score_text = font.render("SCORE: " + str(score.score), True, BLUE)
     WINDOW.blit(score_text, (5, 2))
 
     # Atualiza o display
