@@ -15,10 +15,10 @@ pip install pygame-ce
 - Rode o <strong>main.py</strong>
 
 ```
-python ./main.py
+python ./src/main.py
 ```
 
-![snake-game-gif](https://github.com/eryk-fernandes/snake-game-python/blob/main/snake-gif.gif)
+<img src="./assets/sprites/game_image.png" width="200" alt="snake-game-photo">
 
 💻 Tecnologias:
 - Python 3
